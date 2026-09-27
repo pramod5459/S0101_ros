@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+
+<sdf version="1.7">
+
+  <model name="red_block">
+
+    <static>false</static>
+
+    <link name="block_link">
+
+      <inertial>
+        <mass>0.03</mass>
+
+        <inertia>
+          <ixx>0.000008</ixx>
+          <iyy>0.000008</iyy>
+          <izz>0.000008</izz>
+
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyz>0</iyz>
+        </inertia>
+      </inertial>
+
+      <collision name="collision">
+
+        <geometry>
+          <box>
+            <size>0.04 0.04 0.04</size>
+          </box>
+        </geometry>
+
+      </collision>
+
+      <sensor name="red_block_contact_sensor" type="contact">
+
+        <always_on>true</always_on>
+        <update_rate>50</update_rate>
+
+        <contact>
+            <collision>collision</collision>
+            <topic>/red_block/contacts</topic>
+        </contact>
+
+      </sensor>
+
+      <visual name="visual">
+
+        <geometry>
+          <box>
+            <size>0.04 0.04 0.04</size>
+          </box>
+        </geometry>
+
+        <material>
+          <ambient>1 0 0 1</ambient>
+          <diffuse>1 0 0 1</diffuse>
+        </material>
+
+      </visual>
+
+    </link>
+
+  </model>
+
+</sdf>

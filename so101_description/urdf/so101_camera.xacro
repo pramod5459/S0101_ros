@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- ===================================================== -->
+    <!-- CAMERA BODY                                           -->
+    <!-- ===================================================== -->
+
+    <link name="camera_link">
+
+        <visual>
+            <geometry>
+                <box size="0.025 0.025 0.025"/>
+            </geometry>
+
+            <material name="camera_black">
+                <color rgba="0.05 0.05 0.05 1"/>
+            </material>
+        </visual>
+
+        <inertial>
+            <mass value="0.02"/>
+
+            <inertia
+                ixx="0.00001"
+                iyy="0.00001"
+                izz="0.00001"
+                ixy="0"
+                ixz="0"
+                iyz="0"/>
+        </inertial>
+
+    </link>
+
+
+    <!-- ===================================================== -->
+    <!-- CAMERA BODY MOUNT                                     -->
+    <!-- ===================================================== -->
+
+    <joint name="camera_joint" type="fixed">
+
+        <parent link="gripper_link"/>
+        <child link="camera_link"/>
+
+        <!-- Keep visible camera body where it was working -->
+        <origin
+            xyz="0.11 -0.05 -0.02"
+            rpy="0 0 0"/>
+
+    </joint>
+
+
+    <!-- ===================================================== -->
+    <!-- ACTUAL CAMERA SENSOR FRAME                            -->
+    <!-- ===================================================== -->
+
+    <link name="camera_sensor_link"/>
+
+    <joint name="camera_sensor_joint" type="fixed">
+
+        <parent link="camera_link"/>
+        <child link="camera_sensor_link"/>
+
+        <!-- This is the sensor pose that gave us the red cube view -->
+        <origin
+            xyz="-0.0193 -0.0036 0.0038"
+            rpy="0 -0.189 -2.958"/>
+
+    </joint>
+
+
+    <!-- ===================================================== -->
+    <!-- ROS OPTICAL FRAME                                     -->
+    <!-- ===================================================== -->
+
+    <link name="camera_optical_frame"/>
+
+    <joint name="camera_optical_joint" type="fixed">
+
+        <parent link="camera_sensor_link"/>
+        <child link="camera_optical_frame"/>
+
+        <!-- ROS optical convention:
+             Z forward
+             X right
+             Y down
+        -->
+        <origin
+            xyz="0 0 0"
+            rpy="-1.5708 0 -1.5708"/>
+
+    </joint>
+
+
+    <!-- ===================================================== -->
+    <!-- GAZEBO CAMERA SENSOR                                  -->
+    <!-- ===================================================== -->
+
+    <gazebo reference="camera_sensor_link">
+
+        <sensor name="so101_camera" type="camera">
+
+            <!-- Sensor is exactly at camera_sensor_link -->
+            <pose>0 0 0 0 0 0</pose>
+
+            <always_on>true</always_on>
+
+            <update_rate>30</update_rate>
+
+            <visualize>true</visualize>
+
+            <topic>/camera</topic>
+
+            <camera>
+
+                <horizontal_fov>1.047</horizontal_fov>
+
+                <image>
+                    <width>640</width>
+                    <height>480</height>
+                    <format>R8G8B8</format>
+                </image>
+
+                <clip>
+                    <near>0.02</near>
+                    <far>5.0</far>
+                </clip>
+
+            </camera>
+
+        </sensor>
+
+    </gazebo>
+
+</robot>
